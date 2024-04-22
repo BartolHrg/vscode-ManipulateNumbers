@@ -1,54 +1,45 @@
 {
-    "name": "insertnumbers",
-    "displayName": "Insert Numbers",
-    "description": "Insert increasing numbers",
-    "icon": "images/icon.ico",
-    "version": "0.9.1",
-    "publisher": "Asuka",
-    "license": "SEE LICENSE IN LICENSE.TXT",
-    "homepage": "https://github.com/Inori/vscode-InsertNumbers",
-    "galleryBanner": {
-        "color": "#0000FF",
-        "theme": "dark"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/Inori/vscode-InsertNumbers.git"
-    },
-    "bugs": {
-        "url": "https://github.com/Inori/vscode-InsertNumbers/issues",
-        "email": "bingkan@outlook.com"
-    },
-    "categories": [
-        "Other"
-    ],
-    "engines": {
-        "vscode": "^1.0.0"
-    },
-    "activationEvents": [
-        "onCommand:extension.insertNumbers"
-    ],
-    "main": "./out/src/extension",
-    "contributes": {
-        "commands": [{
-            "command": "extension.insertNumbers",
-            "title": "Insert Numbers"
-        }],
-        
-        "keybindings": [{
-            "command": "extension.insertNumbers",
-            "key": "ctrl+alt+n",
-            "mac": "cmd+alt+n",
-            "when": "editorTextFocus"
-        }]
-    },
-    "scripts": {
-        "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
-        "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
-        "postinstall": "node ./node_modules/vscode/bin/install"
-    },
-    "devDependencies": {
-        "typescript": "^1.8.5",
-        "vscode": "^0.11.0"
-    }
+  "name": "insertnumbers",
+  "displayName": "insertNumbers",
+  "description": "",
+  "version": "0.9.2",
+  "engines": {
+    "vscode": "^1.88.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "insertnumbers.insertNumbers",
+        "title": "Insert Numbers"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.6",
+    "@types/node": "18.x",
+    "@types/vscode": "^1.88.0",
+    "@typescript-eslint/eslint-plugin": "^6.19.1",
+    "@typescript-eslint/parser": "^6.19.1",
+    "@vscode/test-cli": "^0.0.4",
+    "@vscode/test-electron": "^2.3.9",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@types/sprintf-js": "^1.1.4",
+    "sprintf-js": "^1.1.3"
+  }
 }

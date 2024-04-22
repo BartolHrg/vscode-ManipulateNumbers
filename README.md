@@ -1,4 +1,23 @@
 # README
+This is a patch version for extension [`Insert Numbers`](https://marketplace.visualstudio.com/items?itemName=Asuka.insertnumbers).  
+
+## Why
+You might encountered a bug that an extra number group inserts before the number group you input when using the origin [`Insert Numbers`](https://marketplace.visualstudio.com/items?itemName=Asuka.insertnumbers) extension.  
+This extension certainly helped me a lot for years,speeded up and simplified tedious tasks.  
+Due to the update of `VSCode`,the origin extension works defective now.  
+Since we are unable to contact author of the origin extension and I know some js/ts,  
+I fork it and managed to patch it,recover to the origin behavior.
+
+## Source
+* GitHub https://github.com/Inori/vscode-InsertNumbers
+* Visual Studio Marketplace https://marketplace.visualstudio.com/items?itemName=Asuka.insertnumbers
+
+## Patch
+* select first number group while calling this extension,avoid extra number group.
+* update to the latest standard of `TypeScript`.
+* update to latest vscode API.
+* update sprintf.js version.
+
 ## Insert Numbers for Visual Studio Code
 An extension to insert increasing numbers.
 
