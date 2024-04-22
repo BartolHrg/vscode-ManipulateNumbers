@@ -1,7 +1,7 @@
 {
   "name": "insertnumbersfix",
   "displayName": "Insert Numbers Fix",
-  "description": "Insert increasing numbers (patch/fix bugs)",
+  "description": "Insert increasing numbers (fix)",
   "version": "0.9.3",
   "repository": {
     "url": "https://github.com/AlpsMonaco/vscode-InsertNumbers",
