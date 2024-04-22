@@ -16,6 +16,10 @@
       {
         "command": "insertnumbers.insertNumbers",
         "title": "Insert Numbers"
+      },
+      {
+        "command": "insertnumbers.insertNumbers.fix",
+        "title": "Insert Numbers (Fix)"
       }
     ]
   },
