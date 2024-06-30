@@ -63,9 +63,5 @@
     "@vscode/test-electron": "^2.3.9",
     "eslint": "^8.56.0",
     "typescript": "^5.3.3"
-  },
-  "dependencies": {
-    "@types/sprintf-js": "^1.1.4",
-    "sprintf-js": "^1.1.3"
   }
 }
