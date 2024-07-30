@@ -1,5 +1,3 @@
-Insert Numbers License:
+Manipulate Numbers License:
     GPL
 
-sprintf.js License:
-    printf.js is licensed under the terms of the 3-clause BSD license.

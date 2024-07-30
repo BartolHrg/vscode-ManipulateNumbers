@@ -1,27 +1,65 @@
 # README
-This is a patch/fix version for extension [Insert Numbers](https://marketplace.visualstudio.com/items?itemName=Asuka.insertnumbers).  
-When using the original [Insert Numbers](https://marketplace.visualstudio.com/items?itemName=Asuka.insertnumbers) extension,you might have encountered a bug that an extra number group inserts before the number group you input.  
-This is what this extension fix for.  
+Extension for inserting sequential numbers and manipulating text under multiple cursors.  
+* insert sequential numbers with rich formatting  
+* run custom functions on selected text  
+
+This is inspired by [Insert Numbers](https://marketplace.visualstudio.com/items?itemName=Asuka.insertnumbers)  
+and [Insert Numbers (Fix)](https://marketplace.visualstudio.com/items?itemName=alpsmonaco.insertnumbersfix)  
 
 ## Usage
-You may still have the original [Insert Numbers](https://marketplace.visualstudio.com/items?itemName=Asuka.insertnumbers) extension,so I add a new command `Insert Numbers (Fix)` to avoid confusion.  
-I also keep the `Insert Numbers` command,so you can use it directly after you unistall the original [Insert Numbers](https://marketplace.visualstudio.com/items?itemName=Asuka.insertnumbers) extension.
 
-![default behavior](images/fix-usage.gif)
+### Insert
+Running the command `manipulatenumbers.insertNumbers` (`Ctrl+Alt+N`) opens prompt to insert format:  
+`[zfill][=][int_width][.(=|precision)][format][+][start][±step][separator][separator_interval]`  
+* `zfill` - Either 0 or space (space is default). This character will be appended to the left of number (if needed by the `width`).  
+* `=` - If present, all inserted numbers will be of equal width (smaller numbers will be padded with `zfill`).  
+* `int_width` - Number of integer digits. If number is smaller than this, it will be padded with `zfill`. This can be used along with `=` above.  
+* `precision` - Either integer or =. If integer, all numbers will be rounded to this amount of decimals. If =, all numbers will have the same amount of decimals (least possible without rounding).  
+* `format` - d or D for decimal, x or X for hex, (and in future c or C for characters). x will produce lowercase c0ffee, and X will produce uppercase C0FFEE.  
+* `+` - If present, positive numbers will have + in front (negative numbers always have -).  
+* `start` - integer or rational number.  
+* `±step` - integer or rational number (use + for ascending, and - for descending sequences).  
+* `separator` - Thousands separator. Either comma, space, or underscore. (TODO: add apostrophe).  
+* `separator_interval` - `separator` appears every …! For decimal, default is 3, for hex 2.  
 
-## Background
-This extension certainly helped me a lot for years,speeded up and simplified tedious tasks.  
-Due to the update of `VSCode`,the original extension works defective now.  
-Since we are unable to contact author of the original extension,    
-I fork it and managed to fix it,recover to the original behavior.
+Immediatelly after inserting, you will be offered to run manipulation, which you can cancel by pressing Escape or Enter.
+
+### Manipulate
+Running the command `manipulatenumbers.manipulateNumbers` (`Ctrl+Alt+M`) opens prompt to insert expression.  
+Run any JS expression or function (or special command!) on selected text.  
+
+Expressions are written as if they appear right of the following arrow function:  
+`(x: number, s: string) => `  
+Meaning you can either have simple expressions like `x + 1` or complex functions `{ return x + 1; }`.  
+`s` is text in string format, and `x` is result of `Number(s)` (which is `NaN` if `s` is not a number).  
+
+Special commands are in format `:count`.  
+Currently, only `:count` is supported.  
+
+## Examples
+
+![default behavior](images/default.png)  
+![complex example](images/complex.png)  
+![width, =precision, and signed](images/width_and_signed.png)  
+(For manipulation, first was inserted numbers 0 to 14 (see 1st image), and then `2 ** x`)  
+![manipulation](images/manipulation.png)  
+
 
 ## Source
-### Origin
+
+my:  
+* GitHub https://github.com/BartolHrg/vscode-ManipulateNumbers
+* Visual Studio Marketplace TODO
+
+original:  
 * GitHub https://github.com/Inori/vscode-InsertNumbers
 * Visual Studio Marketplace https://marketplace.visualstudio.com/items?itemName=Asuka.insertnumbers
 
-### Patch/Fix Version
-* This Repository https://github.com/AlpsMonaco/vscode-InsertNumbers
+2nd version:  
+* GitHub https://github.com/AlpsMonaco/vscode-InsertNumbers
+* Visual Studio Marketplace https://marketplace.visualstudio.com/items?itemName=alpsmonaco.insertnumbersfix
+
+(honestly, I don't know what sections below are)
 
 ## Patch/Fix Notes
 * select first number group while calling this extension,avoid extra number group.
@@ -29,40 +67,6 @@ I fork it and managed to fix it,recover to the original behavior.
 * update to latest vscode API.
 * update sprintf.js,remove `TSSprintf.ts`.
 
-## Insert Numbers for Visual Studio Code
-An extension to insert increasing numbers.
-
-![default behavior](images/default.gif)
-
-## Usage
-* Command: `Insert Numbers`
-* Keybindings: `ctrl+alt+n` on Windows and Linux or `cmd+alt+n` on OSX
-
-## Control format
-The format of the inserted numbers is controlled by a C-Style format string using in a sprintf function.
-
-There are two ways to change the default format string.
-* You can change your `settings.json` file to modify the default value:
-
-    ![settings](images/settings.png)
-    
-* You can input format string in the `InputBox` each time you toggle insert. The format string can be a single string like `%02d`:
-
-    ![dec format](images/dec.gif)
-
-    or with start number and step, like `%08X:0:4`:
-
-    ![input format](images/hex.gif)
-
-    ### Note
-    * Do not input more than one type specifier in a format string. If you want to input more than one number, you can do it another time.
-    * Do not input `':'` in format string.
-
-## Thanks
-* [sprintf.js](https://github.com/alexei/sprintf.js)
-
-## For more information or bug reports
-* [GitHub](https://github.com/Inori/vscode-InsertNumbers/)
 
 ## Changes
 * Version 0.9.0: April 29, 2016

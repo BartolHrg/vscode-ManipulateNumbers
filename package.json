@@ -1,17 +1,17 @@
 {
-  "name": "insertnumbersfix",
-  "displayName": "Insert Numbers Fix",
-  "description": "Insert increasing numbers (fix)",
+  "name": "manipulatenumbers",
+  "displayName": "Insert & Manipulate Numbers",
+  "description": "Insert & Manipulate Numbers (rich formatting & custom evaluations)",
   "version": "0.9.4",
   "repository": {
-    "url": "https://github.com/AlpsMonaco/vscode-InsertNumbers",
+    "url": "https://github.com/BartolHrg/vscode-ManipulateNumbers",
     "type": "git"
   },
   "engines": {
     "vscode": "^1.88.0"
   },
   "icon": "images/icon.ico",
-  "publisher": "AlpsMonaco",
+  "publisher": "BartolHrg",
   "categories": [
     "Other"
   ],
@@ -20,7 +20,7 @@
     "theme": "dark"
   },
   "bugs": {
-    "url": "https://github.com/Inori/vscode-InsertNumbers/issues",
+    "url": "https://github.com/BartolHrg/vscode-ManipulateNumbers/issues",
     "email": "kzj961014@qq.com"
   },
   "activationEvents": [],
@@ -28,19 +28,25 @@
   "contributes": {
     "commands": [
       {
-        "command": "insertnumbers.insertNumbers",
+        "command": "manipulatenumbers.insertNumbers",
         "title": "Insert Numbers"
       },
       {
-        "command": "insertnumbers.insertNumbers.fix",
-        "title": "Insert Numbers (Fix)"
+        "command": "manipulatenumbers.manipulateNumbers",
+        "title": "Manipulate Numbers"
       }
     ],
     "keybindings": [
       {
-        "command": "insertnumbers.insertNumbers",
+        "command": "manipulatenumbers.insertNumbers",
         "key": "ctrl+alt+n",
         "mac": "cmd+alt+n",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "manipulatenumbers.manipulateNumbers",
+        "key": "ctrl+alt+m",
+        "mac": "cmd+alt+m",
         "when": "editorTextFocus"
       }
     ]
@@ -51,7 +57,8 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "prim": "npm run compile && npm run lint && node ./out/test/primitiveTest.test.js"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.6",
