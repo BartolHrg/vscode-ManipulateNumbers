@@ -2,7 +2,7 @@
   "name": "manipulatenumbers",
   "displayName": "Insert & Manipulate Numbers",
   "description": "Insert & Manipulate Numbers (rich formatting & custom evaluations)",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "repository": {
     "url": "https://github.com/BartolHrg/vscode-ManipulateNumbers",
     "type": "git"
@@ -21,7 +21,7 @@
   },
   "bugs": {
     "url": "https://github.com/BartolHrg/vscode-ManipulateNumbers/issues",
-    "email": "kzj961014@qq.com"
+    "email": "bartol.hrg.backup@gmail.com"
   },
   "activationEvents": [],
   "main": "./out/extension.js",

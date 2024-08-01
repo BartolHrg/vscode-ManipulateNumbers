@@ -15,12 +15,14 @@ Running the command `manipulatenumbers.insertNumbers` (`Ctrl+Alt+N`) opens promp
 * `=` - If present, all inserted numbers will be of equal width (smaller numbers will be padded with `zfill`).  
 * `int_width` - Number of integer digits. If number is smaller than this, it will be padded with `zfill`. This can be used along with `=` above.  
 * `precision` - Either integer or =. If integer, all numbers will be rounded to this amount of decimals. If =, all numbers will have the same amount of decimals (least possible without rounding).  
-* `format` - d or D for decimal, x or X for hex, (and in future c or C for characters). x will produce lowercase c0ffee, and X will produce uppercase C0FFEE.  
+* `format` - d or D for decimal, x or X for hex, (and in future c or C for characters). x will produce lowercase c0ffee, and X will produce uppercase C0FFEE. You **need** this if you have anything before this.  
 * `+` - If present, positive numbers will have + in front (negative numbers always have -).  
 * `start` - integer or rational number.  
 * `±step` - integer or rational number (use + for ascending, and - for descending sequences).  
 * `separator` - Thousands separator. Either comma, space, or underscore. (TODO: add apostrophe).  
 * `separator_interval` - `separator` appears every …! For decimal, default is 3, for hex 2.  
+
+Important note: if you have anything before `format`, you also need `format`.  
 
 Immediatelly after inserting, you will be offered to run manipulation, which you can cancel by pressing Escape or Enter.
 
@@ -49,7 +51,7 @@ Currently, only `:count` is supported.
 
 my:  
 * GitHub https://github.com/BartolHrg/vscode-ManipulateNumbers
-* Visual Studio Marketplace TODO
+* Visual Studio Marketplace https://marketplace.visualstudio.com/items?itemName=BartolHrg.manipulatenumbers
 
 original:  
 * GitHub https://github.com/Inori/vscode-InsertNumbers
