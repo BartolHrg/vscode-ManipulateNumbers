@@ -35,6 +35,8 @@ Expressions are written as if they appear right of the following arrow function:
 Meaning you can either have simple expressions like `x + 1` or complex functions `{ return x + 1; }`.  
 `s` is text in string format, and `x` is result of `Number(s)` (which is `NaN` if `s` is not a number).  
 
+Note: This functionality uses the built-in JS `eval` function (But probably nothing bad can happen).  
+
 Special commands are in format `:count`.  
 Currently, only `:count` is supported.  
 
