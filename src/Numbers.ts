@@ -8,6 +8,9 @@ export abstract class MyNumber {
 	static fromNumberParts<N extends typeof MyNumber>(this: N, parts: NumberParts): InstanceType<N> {
 		throw new Error("not implemented");
 	}
+	static fromString<N extends typeof MyNumber>(this: N, str: string): InstanceType<N> {
+		throw new Error("not implemented");
+	}
 	public abstract copy(): this;
 	public abstract add(other: this): void;
 	public abstract mul(scalar: number): void;
@@ -30,6 +33,13 @@ export abstract class MyNumeric extends MyNumber {
 		let value = BigInt(str.replace(/^0+(?=\d)/, ''));
 		if (sign < 0) { value = -value; }
 		return new (this as any)(value, fractional_count);
+	}
+	static fromString<N extends typeof MyNumber>(this: N, str: string): InstanceType<N> {
+		const re = /^\s*(\+?|-?)\s*([\da-fA-F]*)\s*\.?\s*([\da-fA-F]*)\s*$/;
+		const m = re.exec(str);
+		if (!m || m.length !== 4) { throw new Error(`Invalid number ${str}`); }
+		const [_, sign, whole, frac] = m;
+		return this.fromNumberParts([sign === "-" ? -1 : +1, whole, frac]);
 	}
 	public copy(): this {
 		const constructor = this.constructor as new (value: bigint, fractional_count: number) => this;
@@ -110,7 +120,7 @@ export class MyStringNumber extends MyNumber {
 export const format_to_number_class = {
 	"d": MyDecimal,
 	"x": MyHexadecimal,
-	"y": MyStringNumber,
+	"c": MyStringNumber,
 } as {[format_specifier: string]: typeof MyNumber};
 
 /* 

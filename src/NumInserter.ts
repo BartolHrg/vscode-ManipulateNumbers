@@ -15,7 +15,7 @@ import { all, enumerate, filter, HandledError, map, only, zip } from "./Util";
 import { Parser } from './Parser';
 import { InsertSettings } from './InsertSettings';
 import { formatNumbers } from './Formatter';
-import { evaluate } from './Evaluator';
+import { evaluate, StringsAndSelections } from './Evaluator';
 
 // TODO add formula
 // like ctrl+alt+f opens window, you type formula
@@ -54,9 +54,12 @@ export class NumInserter {
 		const selections: readonly vscode.Selection[] = text_editor.selections;
 		if (selections.length === 0) { return; }
 		
-		const strings = await this.getManipulation(text_editor, selections);
-		if (strings === undefined) { return; }
-		const new_selections = this.calculateNewSelections(selections, strings);
+		let [strings, new_selections] = await this.getManipulation(text_editor, selections);
+		if (strings === undefined) { 
+			if (new_selections) { text_editor.selections = new_selections; }
+			return; 
+		}
+		if (!new_selections) { new_selections = this.calculateNewSelections(selections, strings); }
 		await text_editor.edit((builder) => {
 			for (const [sel, str] of zip(selections, strings)) {
 				builder.replace(sel, str);
@@ -66,7 +69,7 @@ export class NumInserter {
 		text_editor.selections = new_selections;
 	}
 	
-	private async getManipulation(text_editor: vscode.TextEditor, selections: readonly vscode.Selection[]): Promise<string[] | void> {
+	private async getManipulation(text_editor: vscode.TextEditor, selections: readonly vscode.Selection[]): Promise<StringsAndSelections> {
 		let input: string | undefined = this.last_manipulate_input;
 		
 		while (true) {
@@ -76,12 +79,12 @@ export class NumInserter {
 				value: input,
 			};
 			input = await vscode.window.showInputBox(opt);
-			if (input === undefined) { return; }
+			if (input === undefined) { return [undefined, undefined]; }
 			this.last_manipulate_input = input;
 			
-			const before = selections.map(sel => text_editor.document.getText(sel));
+			const old = selections.map(sel => text_editor.document.getText(sel));
 			try {
-				var results = evaluate(before, input);
+				var [results, new_selections] = evaluate(old, selections, input);
 			} catch (error) {
 				if (!(error instanceof HandledError)) {
 					const errmsg = error instanceof Error ? error.stack || error.name + " " + error.message : JSON.stringify(error);
@@ -89,13 +92,13 @@ export class NumInserter {
 				}
 				continue;
 			}
-			if (results === undefined) { return; }
-			if (results.length !== selections.length) {
+			if (results === undefined) { return [results, new_selections]; }
+			if (results.length !== (new_selections ?? selections).length) {
 				void vscode.window.showErrorMessage("Evaluation didn't result in equal number of elements\nThis is most likely a bug");
 				continue;
 			}
 			const strings = results.map(s => "" + s);
-			return strings;
+			return [strings, new_selections];
 		}
 	}
 	private async getSettings(): Promise<InsertSettings | undefined> {

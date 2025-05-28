@@ -6,6 +6,9 @@ Extension for inserting sequential numbers and manipulating text under multiple 
 This is inspired by [Insert Numbers](https://marketplace.visualstudio.com/items?itemName=Asuka.insertnumbers)  
 and [Insert Numbers (Fix)](https://marketplace.visualstudio.com/items?itemName=alpsmonaco.insertnumbersfix)  
 
+## ⚠️ Warning ⚠️
+This code uses JS `eval` function, but only on **YOUR** input, so probably nothing bad can happen.  
+
 ## Usage
 
 ### Insert
@@ -38,7 +41,15 @@ Meaning you can either have simple expressions like `x + 1` or complex functions
 Note: This functionality uses the built-in JS `eval` function (But probably nothing bad can happen).  
 
 Special commands are in format `:count`.  
-Currently, only `:count` is supported.  
+* `:count` - shows how many cursors are there.  
+* `:format[xcd]#{format like above}` - format numbers (e.g. if you aren't satisfied with result of insert). `xcd` is optional, it tells how should we parse numbers (decimal/hexadecimal/~~characters~~).  
+  It is not (yet?) possible to change number base (e.g. dec to hex) (you can do that by ordinary Manipulate).  
+* `:sort[-][#expression]` - sort selections. `-` for reverse. `expression` is any valid JS after `(s1: string, s2: string) => `.  
+  E.g. `:sort# Number(s1) - Number(s2)` with multiple cursors on `4`, `8`, `3` would reorder them to `3`, `4`, `8` (but for numbers, see next `:sortn`). (This also uses JS `eval`, but probably nothing bad can happen)  
+* `:sortn[-]` - like previous, but for numbers.  
+* `:order[-]` - reorders selections internally in VSCode (so that 1st cursor in document is 1st selection). This does not change the document. `-` for reverse order.  
+
+_TODO: add stacking like `:order :sortn :format#,2`_
 
 ## Examples
 
