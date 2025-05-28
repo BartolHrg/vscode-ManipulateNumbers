@@ -35,6 +35,7 @@ function createNewSelectionFromText(selection: vscode.Selection, text: string): 
 }
 
 export class NumInserter {
+	//	private logger = vscode.window.createOutputChannel("Manipulate Numbers");
 	private parser = new Parser();
 	
 	public async processInsert() {
@@ -53,7 +54,7 @@ export class NumInserter {
 		
 		const strings = await this.getManipulation(text_editor, selections);
 		if (strings === undefined) { return; }
-		const new_selections = selections.map((sel, index) => createNewSelectionFromText(sel, strings[index]));
+		const new_selections = this.calculateNewSelections(selections, strings);
 		await text_editor.edit((builder) => {
 			for (const [sel, str] of zip(selections, strings)) {
 				builder.replace(sel, str);
@@ -131,10 +132,7 @@ export class NumInserter {
 			}
 		})(), settings);
 		// console.log(JSON.stringify(numbers, undefined, 2));
-		const new_selections = selections.map((sel, index) => {
-			const str: string = numbers[index];
-			return new vscode.Selection(sel.start, sel.start.translate(0, str.length));
-		});
+		const new_selections = this.calculateNewSelections(selections, numbers);
 		await text_editor.edit((builder) => {
 			for (const [sel, str] of zip(selections, numbers)) {
 				builder.replace(sel, str);
@@ -143,7 +141,53 @@ export class NumInserter {
 		// vscode.window.showInformationMessage(JSON.stringify(new_selections));
 		text_editor.selections = new_selections;
 	}
-	
+	private positionToString(pos: vscode.Position): string {
+		return pos.line + ":" + pos.character;
+	}
+	private selectionToString(sel: vscode.Selection): string {
+		return this.positionToString(sel.start) + "-" + this.positionToString(sel.end);
+	}
+	private calculateNewSelections(old_selections: readonly vscode.Selection[], new_strings: string[]) {
+		const sort_key = old_selections.map((sel, idx) => idx).sort((i1, i2) => old_selections[i1].start.compareTo(old_selections[i2].start));
+		let diff_line = 0;
+		let diff_char = 0;
+		let last_end_line = -1;
+		const sorted_new = sort_key.map(index => {
+			const sel = old_selections[index];
+			const str = new_strings[index];
+			if (last_end_line !== sel.start.line) {
+				diff_char = 0;
+			}
+			const [line_count, chars_after_n] = this.calculateStringImpact(str);
+			const start = new vscode.Position(sel.start.line + diff_line, sel.start.character + diff_char);
+			const end = new vscode.Position(start.line + line_count, line_count === 0 ? start.character + str.length : chars_after_n);
+			
+			diff_line += line_count - (sel.end.line - sel.start.line);
+			diff_char = end.character - sel.end.character;
+			last_end_line = sel.end.line;
+			const new_sel = new vscode.Selection(start, end);
+			return new_sel;
+		});
+		const new_selections = new Array(old_selections.length);
+		//	since sorted_new[0] is derived from old_selections[sort_key[0]]
+		//	therefore sorted_new[0] goes to new_selections[sort_key[0]]
+		for (let i = 0; i < sort_key.length; ++i) {
+			new_selections[sort_key[i]] = sorted_new[i];
+		}
+		return new_selections;
+	}
+	private calculateStringImpact(str: string): [number, number] {
+		str = str.replaceAll(/\n|\r\n?/g, "\n");
+		let line_count = 0;
+		let last_n = -1;
+		for (let i = 0; i < str.length; ++i) {
+			if (str[i] === "\n") {
+				++line_count;
+				last_n = i;
+			}
+		}
+		return [line_count, str.length - last_n - 1];
+	}
 
 
 	public dispose() {

@@ -2,7 +2,7 @@
   "name": "manipulatenumbers",
   "displayName": "Insert & Manipulate Numbers",
   "description": "Insert & Manipulate Numbers (rich formatting & custom evaluations)",
-  "version": "0.9.7",
+  "version": "1.0.0",
   "repository": {
     "url": "https://github.com/BartolHrg/vscode-ManipulateNumbers",
     "type": "git"
