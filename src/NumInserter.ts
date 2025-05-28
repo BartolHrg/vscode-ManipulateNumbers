@@ -37,6 +37,8 @@ function createNewSelectionFromText(selection: vscode.Selection, text: string): 
 export class NumInserter {
 	//	private logger = vscode.window.createOutputChannel("Manipulate Numbers");
 	private parser = new Parser();
+	private last_insert_input = "";
+	private last_manipulate_input = "";
 	
 	public async processInsert() {
 		//Input default numbers first.
@@ -64,8 +66,8 @@ export class NumInserter {
 		text_editor.selections = new_selections;
 	}
 	
-	private async getManipulation(text_editor: vscode.TextEditor, selections: readonly vscode.Selection[]): Promise<string[] | undefined> {
-		let input: string | undefined = undefined;
+	private async getManipulation(text_editor: vscode.TextEditor, selections: readonly vscode.Selection[]): Promise<string[] | void> {
+		let input: string | undefined = this.last_manipulate_input;
 		
 		while (true) {
 			const opt: vscode.InputBoxOptions = {
@@ -74,7 +76,8 @@ export class NumInserter {
 				value: input,
 			};
 			input = await vscode.window.showInputBox(opt);
-			if (input === undefined) { return undefined; }
+			if (input === undefined) { return; }
+			this.last_manipulate_input = input;
 			
 			const before = selections.map(sel => text_editor.document.getText(sel));
 			try {
@@ -86,7 +89,7 @@ export class NumInserter {
 				}
 				continue;
 			}
-			if (results === undefined) { return undefined; }
+			if (results === undefined) { return; }
 			if (results.length !== selections.length) {
 				void vscode.window.showErrorMessage("Evaluation didn't result in equal number of elements\nThis is most likely a bug");
 				continue;
@@ -96,7 +99,7 @@ export class NumInserter {
 		}
 	}
 	private async getSettings(): Promise<InsertSettings | undefined> {
-		let input: string | undefined = undefined;
+		let input: string | undefined = this.last_insert_input;
 		
 		while (true) {
 			const opt: vscode.InputBoxOptions = {
@@ -106,6 +109,7 @@ export class NumInserter {
 			};
 			input = await vscode.window.showInputBox(opt);
 			if (input === undefined) { return undefined; }
+			this.last_insert_input = input;
 			
 			const settings = this.parser.parseUserInput(input);
 			if (settings !== undefined) {
